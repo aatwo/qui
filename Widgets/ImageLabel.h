@@ -1,5 +1,5 @@
-#ifndef IMAGELABEL_H
-#define IMAGELABEL_H
+#ifndef QUI_IMAGELABEL_H
+#define QUI_IMAGELABEL_H
 
 
 #include <QWidget>
@@ -52,4 +52,4 @@ namespace qui
 } // namespace qui
 
 
-#endif // IMAGELABEL_H
+#endif // QUI_IMAGELABEL_H
