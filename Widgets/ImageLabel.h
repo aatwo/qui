@@ -33,6 +33,10 @@ namespace qui
             void                setImage( const QPixmap& image );
             void                setRenderSpeed( RenderSpeed speed );
 
+            QImage              getImage() const;
+            QImage              getCachedImage() const;
+            RenderSpeed         getRenderSpeed() const;
+
 
         private:
 

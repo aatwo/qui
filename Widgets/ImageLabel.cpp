@@ -38,6 +38,21 @@ void qui::ImageLabel::setRenderSpeed( qui::ImageLabel::RenderSpeed speed )
     this->renderSpeed = speed;
 }
 
+QImage qui::ImageLabel::getImage() const
+{
+    return image;
+}
+
+QImage qui::ImageLabel::getCachedImage() const
+{
+    return cachedImage;
+}
+
+qui::ImageLabel::RenderSpeed qui::ImageLabel::getRenderSpeed() const
+{
+    return renderSpeed;
+}
+
 void qui::ImageLabel::paintEvent( QPaintEvent* )
 {
     QPainter p( this );
