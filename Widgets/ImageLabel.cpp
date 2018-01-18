@@ -10,14 +10,26 @@ qui::ImageLabel::ImageLabel( QWidget* parent )
 }
 
 qui::ImageLabel::ImageLabel( const QImage& image, QWidget* parent )
-    : QWidget( parent ),
-      image( image )
+    : ImageLabel( parent )
 {
+    this->image = image;
+}
+
+qui::ImageLabel::ImageLabel( const QPixmap& image, QWidget* parent )
+    : ImageLabel( parent )
+{
+    this->image = image.toImage();
 }
 
 void qui::ImageLabel::setImage( const QImage& image )
 {
     this->image = image;
+    recomputeCachedImage();
+}
+
+void qui::ImageLabel::setImage( const QPixmap& image )
+{
+    this->image = image.toImage();
     recomputeCachedImage();
 }
 
@@ -42,6 +54,14 @@ void qui::ImageLabel::paintEvent( QPaintEvent* )
 void qui::ImageLabel::resizeEvent( QResizeEvent* )
 {
     recomputeCachedImage();
+}
+
+QSize qui::ImageLabel::sizeHint() const
+{
+    if( image.isNull() )
+        return QSize( 10, 10 );
+
+    return image.size();
 }
 
 void qui::ImageLabel::recomputeCachedImage()

@@ -27,8 +27,10 @@ namespace qui
 
             explicit            ImageLabel( QWidget* parent = nullptr );
             explicit            ImageLabel( const QImage& image, QWidget* parent = nullptr );
+            explicit            ImageLabel( const QPixmap& image, QWidget* parent = nullptr );
 
             void                setImage( const QImage& image );
+            void                setImage( const QPixmap& image );
             void                setRenderSpeed( RenderSpeed speed );
 
 
@@ -36,6 +38,7 @@ namespace qui
 
             virtual void        paintEvent( QPaintEvent* ) override;
             virtual void        resizeEvent( QResizeEvent* ) override;
+            virtual QSize       sizeHint() const override;
             void                recomputeCachedImage();
 
             QImage              image;
