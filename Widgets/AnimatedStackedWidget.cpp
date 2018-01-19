@@ -244,13 +244,28 @@ void qui::AnimatedStackedWidget::recomputeWidgetGeometries()
         // so the progress is equal to i as a percentage through
         // the min to max index range
 
-        float minWidgetX            = -width() - mAnimationOffScreenDistance;
-        float maxWidgetX            = width() + mAnimationOffScreenDistance;
-        float progress              = ( static_cast<float>( i ) - minIndex ) / ( maxIndex - minIndex );
-        float distanceFromCenter    = qAbs( mCurrentIndexAnimated - static_cast<float>( i ) );
+        float distanceFromCenter = 0.0;
+        if( mAnimationOrientation == AnimationOrientation::horizontal )
+        {
+            float minWidgetX    = -width() - mAnimationOffScreenDistance;
+            float maxWidgetX    = width() + mAnimationOffScreenDistance;
+            float progress      = ( static_cast<float>( i ) - minIndex ) / ( maxIndex - minIndex );
+            distanceFromCenter  = qAbs( mCurrentIndexAnimated - static_cast<float>( i ) );
 
-        x = minWidgetX + ( maxWidgetX - minWidgetX ) * progress;
-        y = y + ( distanceFromCenter * mAnimationHeightChange );
+            x = minWidgetX + ( maxWidgetX - minWidgetX ) * progress;
+            y = y + ( distanceFromCenter * mAnimationHeightChange );
+        }
+
+        else
+        {
+            float minWidgetY    = -height() - mAnimationOffScreenDistance;
+            float maxWidgetY    = height() + mAnimationOffScreenDistance;
+            float progress      = ( static_cast<float>( i ) - minIndex ) / ( maxIndex - minIndex );
+            distanceFromCenter  = qAbs( mCurrentIndexAnimated - static_cast<float>( i ) );
+
+            x = x - ( distanceFromCenter * mAnimationHeightChange );
+            y = minWidgetY + ( maxWidgetY - minWidgetY ) * progress;
+        }
 
         if( mAnimationChangeOpacity )
         {

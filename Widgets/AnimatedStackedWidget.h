@@ -16,6 +16,12 @@ namespace qui
         Q_OBJECT
         public:
 
+            enum class AnimationOrientation
+            {
+                horizontal,
+                vertical
+            };
+
                                 AnimatedStackedWidget( QWidget* parent = nullptr );
                                 ~AnimatedStackedWidget();
 
@@ -63,6 +69,7 @@ namespace qui
             int                 mAnimationHeightChange      = 40; // Can be negative
             int                 mAnimationOffScreenDistance = 10;
             const bool          mAnimationChangeOpacity     = true;
+            AnimationOrientation mAnimationOrientation      = AnimationOrientation::horizontal;
 
 
     }; // AnimatedStackedWidget
