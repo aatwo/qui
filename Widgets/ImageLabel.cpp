@@ -5,6 +5,7 @@
 qui::ImageLabel::ImageLabel( QWidget* parent )
     : QWidget( parent )
 {
+    setObjectName( "ImageLabel" );
     setContentsMargins( 0, 0, 0, 0 );
     recomputeCachedImage();
 }
