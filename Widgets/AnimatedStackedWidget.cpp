@@ -212,8 +212,6 @@ float qui::AnimatedStackedWidget::getCurrentIndexAnimated() const
 
 void qui::AnimatedStackedWidget::setCurrentIndexAnimated( float value )
 {
-    qDebug() << QString( "Setting animated index value: %1" ).arg( value );
-
     mCurrentIndexAnimated = value;
     emit currentIndexAnimatedChanged();
 

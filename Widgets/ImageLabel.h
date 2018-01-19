@@ -36,6 +36,7 @@ namespace qui
             QImage              getImage() const;
             QImage              getCachedImage() const;
             RenderSpeed         getRenderSpeed() const;
+            void                setLockAspectRatio( bool lock );
 
 
         private:
@@ -48,6 +49,7 @@ namespace qui
             QImage              image;
             QImage              cachedImage;
             RenderSpeed         renderSpeed = RenderSpeed::best_quality;
+            bool                lockAspectRatio = true;
 
 
     }; // ImageLabel

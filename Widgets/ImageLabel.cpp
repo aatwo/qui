@@ -54,6 +54,15 @@ qui::ImageLabel::RenderSpeed qui::ImageLabel::getRenderSpeed() const
     return renderSpeed;
 }
 
+void qui::ImageLabel::setLockAspectRatio( bool lock )
+{
+    if( lock == lockAspectRatio )
+        return;
+
+    lockAspectRatio = lock;
+    recomputeCachedImage();
+}
+
 void qui::ImageLabel::paintEvent( QPaintEvent* )
 {
     QPainter p( this );
@@ -92,6 +101,10 @@ void qui::ImageLabel::recomputeCachedImage()
     if( renderSpeed == RenderSpeed::fast )
         transformationMode = Qt::FastTransformation;
 
-    cachedImage = image.scaled( availableWidth, availableHeight, Qt::KeepAspectRatio, transformationMode );
+    auto aspectRatioMode = Qt::KeepAspectRatio;
+    if( !lockAspectRatio )
+        aspectRatioMode = Qt::IgnoreAspectRatio;
+
+    cachedImage = image.scaled( availableWidth, availableHeight, aspectRatioMode, transformationMode );
     update();
 }
