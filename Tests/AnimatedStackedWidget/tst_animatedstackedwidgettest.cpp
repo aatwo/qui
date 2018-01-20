@@ -21,7 +21,6 @@ class AnimatedStackedWidgetTest : public QObject
         void                testInsertingItems();
         void                testRemovingItems();
         void                testClearingItems();
-
         void                testFirstItemIndexChangeSignal();
         void                testIndexChangeSignal();
         void                testIndexRemovedSignal();
