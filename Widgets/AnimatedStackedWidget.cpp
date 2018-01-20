@@ -1,5 +1,6 @@
 #include "AnimatedStackedWidget.h"
 #include <QDebug>
+#include <QtMath>
 
 
 qui::AnimatedStackedWidget::AnimatedStackedWidget( QWidget* parent )
@@ -220,8 +221,19 @@ void qui::AnimatedStackedWidget::setCurrentIndexAnimated( float value )
 
 void qui::AnimatedStackedWidget::recomputeWidgetGeometries()
 {
+    if( !mWidgetList.size() )
+        return;
+
+    int minVisibleIndex = qFloor( mCurrentIndexAnimated - 2.0 );
+    int maxVisibleIndex = qCeil( mCurrentIndexAnimated + 2.0 );
+
+    if( minVisibleIndex < 0 )
+        minVisibleIndex = 0;
+    if( maxVisibleIndex >= mWidgetList.size() )
+        maxVisibleIndex = mWidgetList.size() - 1;
+
     // Set the position and visibility of each widget
-    for( int i = 0; i < mWidgetList.size(); i++ )
+    for( int i = minVisibleIndex; i <= maxVisibleIndex; i++ )
     {
         QWidget* w = mWidgetList[ i ];
 
@@ -279,7 +291,18 @@ void qui::AnimatedStackedWidget::recomputeWidgetGeometries()
 
 void qui::AnimatedStackedWidget::onAnimationFinished()
 {
-    for( int i = 0; i < mWidgetList.size(); i++ )
+    if( !mWidgetList.size() )
+        return;
+
+    int minVisibleIndex = qFloor( mCurrentIndexAnimated - 2.0 );
+    int maxVisibleIndex = qCeil( mCurrentIndexAnimated + 2.0 );
+
+    if( minVisibleIndex < 0 )
+        minVisibleIndex = 0;
+    if( maxVisibleIndex >= mWidgetList.size() )
+        maxVisibleIndex = mWidgetList.size() - 1;
+
+    for( int i = minVisibleIndex; i <= maxVisibleIndex; i++ )
     {
         QWidget* w = mWidgetList[ i ];
 
