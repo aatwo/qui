@@ -10,7 +10,12 @@
 namespace qui
 {
 
-
+    // This class can be used to manage a collection of widgets, displaying one at a time and
+    // animating the transition between them. It's API mirrors the QStackedWidget API to make it
+    // easier to use and familiar for Qt developers and the animations are highly customisable to
+    // provide a huge range of visual possibilities. No controls for changing the current index are
+    // provided by the class (same as QStackedWidget) so to change the current widget you must do
+    // it programmatically.
     class AnimatedStackedWidget : public QWidget
     {
         Q_OBJECT
@@ -77,13 +82,13 @@ namespace qui
             QList<QGraphicsOpacityEffect*> mOpacityEffectList;
 
             // AnimationProperties
-            int                 mAnimationDurationMs        = 1000;
-            int                 mAnimationHeightChange      = 40; // Can be negative
-            int                 mAnimationOffScreenDistance = 10;
+            int                 mAnimationDurationMs        = 400;
+            int                 mAnimationHeightChange      = 0; // Can be negative
+            int                 mAnimationOffScreenDistance = 40;
             bool                mAnimationChangeOpacity     = true;
             AnimationOrientation mAnimationOrientation      = AnimationOrientation::horizontal;
             QEasingCurve        mAnimationEasingCurve       = QEasingCurve( QEasingCurve::OutCubic );
-            bool                mAnimateWidgetSize          = false;
+            bool                mAnimateWidgetSize          = true;
             float               mAnimationWidgetScaleFactor = 0.2f;
 
 

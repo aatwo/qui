@@ -13,6 +13,9 @@ namespace qui
 {
 
 
+    // This class is designed to replace QLabel for displaying images, allowing you to lock the
+    // image aspect ratio, use both QPixmaps and QImages, and change the render speed between
+    // best-quality and fastest-to-render.
     class ImageLabel : public QWidget
     {
         Q_OBJECT

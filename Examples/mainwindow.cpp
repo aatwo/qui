@@ -1,9 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QtWidgets>
 #include <ImageLabel.h>
 #include <AnimatedStackedWidget.h>
-#include <QLabel>
-#include <QPushButton>
 
 
 MainWindow::MainWindow( QWidget* parent ) :
@@ -40,16 +39,53 @@ MainWindow::MainWindow( QWidget* parent ) :
         auto animatedStackedWidget = new qui::AnimatedStackedWidget( container );
         for( int i = 0; i < 20; i++ )
         {
-            QLabel* w = new QLabel( QString( "Widget %1 " ).arg( i + 1 ) );
+            QWidget* w = nullptr;
+            switch( getRandomInt( 0, 2 ) )
+            {
+                case 0:
+                {
+                    w = new QLabel( QString( "Widget %1 " ).arg( i + 1 ) );
 
-            int r = getRandomInt( 0, 255 );
-            int g = getRandomInt( 0, 255 );
-            int b = getRandomInt( 0, 255 );
-            QColor colour = QColor( r, g, b );
+                    int r = getRandomInt( 0, 255 );
+                    int g = getRandomInt( 0, 255 );
+                    int b = getRandomInt( 0, 255 );
+                    QColor colour = QColor( r, g, b );
+                    w->setStyleSheet( QString( "QLabel { background: %1; }" ).arg( colour.name() ) );
+                    break;
+                }
 
-            w->setStyleSheet( QString( "QLabel { background: %1; }" ).arg( colour.name() ) );
+                case 1:
+                {
+                    w = new QWidget();
+                    QGridLayout* l = new QGridLayout( w );
+
+                    QLabel* l1 = new QLabel( "Label 1", w );
+                    QLabel* l2 = new QLabel( "Label 2", w );
+                    QLabel* l3 = new QLabel( "Label 3", w );
+
+                    QLineEdit* e1 = new QLineEdit( "Line edit 1", w );
+                    QLineEdit* e2 = new QLineEdit( "Line edit 2", w );
+                    QLineEdit* e3 = new QLineEdit( "Line edit 3", w );
+
+                    l->addWidget( l1, 0, 0, 1, 1 );
+                    l->addWidget( e1, 0, 1, 1, 1 );
+
+                    l->addWidget( l2, 1, 0, 1, 1 );
+                    l->addWidget( e2, 1, 1, 1, 1 );
+
+                    l->addWidget( l3, 2, 0, 1, 1 );
+                    l->addWidget( e3, 2, 1, 1, 1 );
+                    break;
+                }
+
+                case 2:
+                {
+                    w = new QDial();
+                    break;
+                }
+            }
+
             animatedStackedWidget->addWidget( w );
-
             indexCombo->addItem( QString::number( i + 1 ) );
         }
 
