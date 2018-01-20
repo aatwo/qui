@@ -7,6 +7,9 @@
 #include <QGraphicsOpacityEffect>
 
 
+class AnimatedStackedWidgetTest;
+
+
 namespace qui
 {
 
@@ -19,6 +22,7 @@ namespace qui
     class AnimatedStackedWidget : public QWidget
     {
         Q_OBJECT
+        friend class AnimatedStackedWidgetTest;
         public:
 
             enum class AnimationOrientation
@@ -83,7 +87,7 @@ namespace qui
 
             // AnimationProperties
             int                 mAnimationDurationMs        = 400;
-            int                 mAnimationHeightChange      = 0; // Can be negative
+            int                 mAnimationHeightChange      = 0;
             int                 mAnimationOffScreenDistance = 40;
             bool                mAnimationChangeOpacity     = true;
             AnimationOrientation mAnimationOrientation      = AnimationOrientation::horizontal;

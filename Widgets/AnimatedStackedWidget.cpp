@@ -42,6 +42,7 @@ int qui::AnimatedStackedWidget::addWidget( QWidget* widget )
         widget->setParent( this );
         widget->setGeometry( contentsRect() );
         widget->show();
+        emit currentChanged( mCurrentIndex );
         return 0;
     }
 

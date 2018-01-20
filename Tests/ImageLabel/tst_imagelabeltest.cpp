@@ -76,6 +76,8 @@ void ImageLabelTest::testLifeCycleWithPostCreationImage()
     QVERIFY( true );
 }
 
+//------------------------------------------------------------------------------
+
 QTEST_MAIN(ImageLabelTest)
 
 #include "tst_imagelabeltest.moc"
