@@ -9,6 +9,7 @@ qui::AnimatedStackedWidget::AnimatedStackedWidget( QWidget* parent )
     setObjectName( "AnimatedStackedWidget" );
     mWidgetAnimator = new QPropertyAnimation( this, "mCurrentIndexAnimated" );
     mWidgetAnimator->setDuration( mAnimationDurationMs );
+    mWidgetAnimator->setEasingCurve( mAnimationEasingCurve );
 
     connect( mWidgetAnimator, &QPropertyAnimation::finished, this, &AnimatedStackedWidget::onAnimationFinished );
 }
@@ -181,6 +182,12 @@ QWidget* qui::AnimatedStackedWidget::widget( int index ) const
     return mWidgetList[ index ];
 }
 
+void qui::AnimatedStackedWidget::setAnimationEasingCurve( const QEasingCurve& easingCurve )
+{
+    mAnimationEasingCurve = easingCurve;
+    mWidgetAnimator->setEasingCurve( easingCurve );
+}
+
 void qui::AnimatedStackedWidget::setCurrentIndex( int index )
 {
     if( index < 0 || index >= mWidgetList.size() || index == mCurrentIndex )
@@ -224,16 +231,8 @@ void qui::AnimatedStackedWidget::recomputeWidgetGeometries()
     if( !mWidgetList.size() )
         return;
 
-    int minVisibleIndex = qFloor( mCurrentIndexAnimated - 2.0 );
-    int maxVisibleIndex = qCeil( mCurrentIndexAnimated + 2.0 );
-
-    if( minVisibleIndex < 0 )
-        minVisibleIndex = 0;
-    if( maxVisibleIndex >= mWidgetList.size() )
-        maxVisibleIndex = mWidgetList.size() - 1;
-
     // Set the position and visibility of each widget
-    for( int i = minVisibleIndex; i <= maxVisibleIndex; i++ )
+    for( int i = 0; i < mWidgetList.size(); i++ )
     {
         QWidget* w = mWidgetList[ i ];
 
@@ -294,15 +293,7 @@ void qui::AnimatedStackedWidget::onAnimationFinished()
     if( !mWidgetList.size() )
         return;
 
-    int minVisibleIndex = qFloor( mCurrentIndexAnimated - 2.0 );
-    int maxVisibleIndex = qCeil( mCurrentIndexAnimated + 2.0 );
-
-    if( minVisibleIndex < 0 )
-        minVisibleIndex = 0;
-    if( maxVisibleIndex >= mWidgetList.size() )
-        maxVisibleIndex = mWidgetList.size() - 1;
-
-    for( int i = minVisibleIndex; i <= maxVisibleIndex; i++ )
+    for( int i = 0; i < mWidgetList.size(); i++ )
     {
         QWidget* w = mWidgetList[ i ];
 

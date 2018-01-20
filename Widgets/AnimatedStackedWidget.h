@@ -33,6 +33,7 @@ namespace qui
             int                 insertWidget( int index, QWidget* widget );
             void                removeWidget( QWidget* widget );
             QWidget*            widget( int index ) const;
+            void                setAnimationEasingCurve( const QEasingCurve& easingCurve );
 
 
         public slots:
@@ -65,11 +66,12 @@ namespace qui
             QList<QGraphicsOpacityEffect*> mOpacityEffectList;
 
             // AnimationProperties
-            int                 mAnimationDurationMs        = 400;
+            int                 mAnimationDurationMs        = 1000;
             int                 mAnimationHeightChange      = 40; // Can be negative
             int                 mAnimationOffScreenDistance = 10;
             const bool          mAnimationChangeOpacity     = true;
             AnimationOrientation mAnimationOrientation      = AnimationOrientation::horizontal;
+            QEasingCurve        mAnimationEasingCurve       = QEasingCurve( QEasingCurve::OutCubic );
 
 
     }; // AnimatedStackedWidget
