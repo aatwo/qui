@@ -134,7 +134,10 @@ void qui::AnimatedStackedWidget::removeWidget( QWidget* widget )
 
     // Remove the opacity effect
     if( mAnimationChangeOpacity )
+    {
         widget->setGraphicsEffect( nullptr );
+        mOpacityEffectList.removeAt( index );
+    }
 
     // Remove the widget and decrement the index if we need to
     mWidgetList.removeAt( index );
@@ -186,6 +189,50 @@ void qui::AnimatedStackedWidget::setAnimationEasingCurve( const QEasingCurve& ea
 {
     mAnimationEasingCurve = easingCurve;
     mWidgetAnimator->setEasingCurve( easingCurve );
+}
+
+void qui::AnimatedStackedWidget::setAnimationDurationMs( int ms )
+{
+    mAnimationDurationMs = ms;
+    mWidgetAnimator->setDuration( ms );
+}
+
+void qui::AnimatedStackedWidget::setAnimationHeightChangePixels( int pixels )
+{
+    mAnimationHeightChange = pixels;
+}
+
+void qui::AnimatedStackedWidget::setAnimationOffScreenDistance( int pixels )
+{
+    mAnimationOffScreenDistance = pixels;
+}
+
+void qui::AnimatedStackedWidget::setAnimateOpacity( bool animateOpacity )
+{
+    if( animateOpacity == mAnimationChangeOpacity )
+        return;
+
+    mAnimationChangeOpacity = animateOpacity;
+
+    if( animateOpacity )
+        createGraphicsEffects();
+    else
+        cleanupGraphicsEffects();
+}
+
+void qui::AnimatedStackedWidget::setAnimationOrientation( AnimationOrientation orientation )
+{
+    mAnimationOrientation = orientation;
+}
+
+void qui::AnimatedStackedWidget::setAnimateWidgetSize( bool animate )
+{
+    mAnimateWidgetSize = animate;
+}
+
+void qui::AnimatedStackedWidget::setAnimationWidgetScaleFactor( float scaleFactor )
+{
+    mAnimationWidgetScaleFactor = scaleFactor;
 }
 
 void qui::AnimatedStackedWidget::setCurrentIndex( int index )
@@ -248,34 +295,45 @@ void qui::AnimatedStackedWidget::recomputeWidgetGeometries()
 
         w->resize( contentsRect().size() );
 
-        float x = contentsRect().left();
-        float y = contentsRect().top();
+        int     widgetX             = contentsRect().left();
+        int     widgetY             = contentsRect().top();
+        int     widgetWidth         = contentsRect().width();
+        int     widgetHeight        = contentsRect().height();
+        float   distanceFromCenter  = qAbs( mCurrentIndexAnimated - static_cast<float>( i ) ); // Value between 0.0 and 1.0
+        float   progress            = ( static_cast<float>( i ) - minIndex ) / ( maxIndex - minIndex );
 
         // animations runs from minIndex all the way to maxIndex
         // so the progress is equal to i as a percentage through
         // the min to max index range
 
-        float distanceFromCenter = 0.0;
-        if( mAnimationOrientation == AnimationOrientation::horizontal )
+        // Animate the widget size
+        if( mAnimateWidgetSize )
         {
-            float minWidgetX    = -width() - mAnimationOffScreenDistance;
-            float maxWidgetX    = width() + mAnimationOffScreenDistance;
-            float progress      = ( static_cast<float>( i ) - minIndex ) / ( maxIndex - minIndex );
-            distanceFromCenter  = qAbs( mCurrentIndexAnimated - static_cast<float>( i ) );
+            float sizeScaleFactorRange  = 1.0f - mAnimationWidgetScaleFactor;
+            float sizeMultiplier        = mAnimationWidgetScaleFactor + sizeScaleFactorRange * ( 1.0 - distanceFromCenter );
 
-            x = minWidgetX + ( maxWidgetX - minWidgetX ) * progress;
-            y = y + ( distanceFromCenter * mAnimationHeightChange );
+            widgetWidth     = sizeMultiplier * static_cast<float>( contentsRect().width() );
+            widgetHeight    = sizeMultiplier * static_cast<float>( contentsRect().height() );
         }
 
+        // Animate the widgets horizontal position
+        if( mAnimationOrientation == AnimationOrientation::horizontal )
+        {
+            float minWidgetX = -widgetWidth - mAnimationOffScreenDistance;
+            float maxWidgetX = width() + mAnimationOffScreenDistance;
+
+            widgetX = minWidgetX + ( maxWidgetX - minWidgetX ) * progress;
+            widgetY = ( 0.5f * height() ) - ( 0.5f * widgetHeight ) + ( distanceFromCenter * mAnimationHeightChange );
+        }
+
+        // Animate the widgets vertical position
         else
         {
-            float minWidgetY    = -height() - mAnimationOffScreenDistance;
-            float maxWidgetY    = height() + mAnimationOffScreenDistance;
-            float progress      = ( static_cast<float>( i ) - minIndex ) / ( maxIndex - minIndex );
-            distanceFromCenter  = qAbs( mCurrentIndexAnimated - static_cast<float>( i ) );
+            float minWidgetX = -widgetHeight - mAnimationOffScreenDistance;
+            float maxWidgetY = height() + mAnimationOffScreenDistance;
 
-            x = x - ( distanceFromCenter * mAnimationHeightChange );
-            y = minWidgetY + ( maxWidgetY - minWidgetY ) * progress;
+            widgetX = ( 0.5f * width() ) - ( 0.5f * widgetWidth ) + ( distanceFromCenter * mAnimationHeightChange );
+            widgetY = minWidgetX + ( maxWidgetY - minWidgetX ) * progress;
         }
 
         if( mAnimationChangeOpacity )
@@ -284,7 +342,8 @@ void qui::AnimatedStackedWidget::recomputeWidgetGeometries()
             opacityEffect->setOpacity( 1.0 - distanceFromCenter );
         }
 
-        w->move( x, y );
+        w->move( widgetX, widgetY );
+        w->resize( widgetWidth, widgetHeight );
     }
 }
 
@@ -310,4 +369,23 @@ void qui::AnimatedStackedWidget::onAnimationFinished()
         w->move( contentsRect().topLeft() );
         w->setVisible( true );
     }
+}
+
+void qui::AnimatedStackedWidget::createGraphicsEffects()
+{
+    for( QWidget* w : mWidgetList )
+    {
+        auto opacityEffect = new QGraphicsOpacityEffect( w );
+        mOpacityEffectList.append( opacityEffect );
+        w->setGraphicsEffect( opacityEffect );
+        opacityEffect->setOpacity( 1.0 );
+    }
+}
+
+void qui::AnimatedStackedWidget::cleanupGraphicsEffects()
+{
+    for( QWidget* w : mWidgetList )
+        w->setGraphicsEffect( nullptr );
+
+    mOpacityEffectList.clear();
 }

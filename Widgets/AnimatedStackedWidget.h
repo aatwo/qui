@@ -33,7 +33,15 @@ namespace qui
             int                 insertWidget( int index, QWidget* widget );
             void                removeWidget( QWidget* widget );
             QWidget*            widget( int index ) const;
+
             void                setAnimationEasingCurve( const QEasingCurve& easingCurve );
+            void                setAnimationDurationMs( int ms );
+            void                setAnimationHeightChangePixels( int pixels );
+            void                setAnimationOffScreenDistance( int pixels );
+            void                setAnimateOpacity( bool animateOpacity );
+            void                setAnimationOrientation( AnimationOrientation orientation );
+            void                setAnimateWidgetSize( bool animate );
+            void                setAnimationWidgetScaleFactor( float scaleFactor );
 
 
         public slots:
@@ -56,6 +64,9 @@ namespace qui
             void                setCurrentIndexAnimated( float value );
             void                recomputeWidgetGeometries();
             void                onAnimationFinished();
+            void                createGraphicsEffects();
+            void                cleanupGraphicsEffects();
+
 
             Q_PROPERTY( float mCurrentIndexAnimated READ getCurrentIndexAnimated WRITE setCurrentIndexAnimated NOTIFY currentIndexAnimatedChanged )
 
@@ -69,9 +80,11 @@ namespace qui
             int                 mAnimationDurationMs        = 1000;
             int                 mAnimationHeightChange      = 40; // Can be negative
             int                 mAnimationOffScreenDistance = 10;
-            const bool          mAnimationChangeOpacity     = true;
+            bool                mAnimationChangeOpacity     = true;
             AnimationOrientation mAnimationOrientation      = AnimationOrientation::horizontal;
             QEasingCurve        mAnimationEasingCurve       = QEasingCurve( QEasingCurve::OutCubic );
+            bool                mAnimateWidgetSize          = false;
+            float               mAnimationWidgetScaleFactor = 0.2f;
 
 
     }; // AnimatedStackedWidget
