@@ -68,6 +68,7 @@ MainWindow::MainWindow( QWidget* parent ) :
     }
 
     connect( ui->comboBox, QOverload<int>::of( &QComboBox::currentIndexChanged ), this, &MainWindow::onComboBoxIndexChanged );
+    ui->comboBox->setCurrentIndex( 1 );
 }
 
 MainWindow::~MainWindow()
